@@ -1,13 +1,21 @@
 import React from 'react'
+import Produto from './componentes_execicio_usecontext/Produto'
+import Limpar from './componentes_execicio_usecontext/Limpar'
+import { GlobalStorage } from './componentes_execicio_usecontext/GlobalContext'
+
+// Utilize o GlobalContext do exemplo anterior para puxar os dados da API abaixo:
+// https://ranekapi.origamid.dev/json/api/produto/
+// assim que o usuário acessar o app
+// coloque os dados da API no contexto global, dando acesso aos dados da mesma
+// defina uma função chamada limparDados que é responsável por zerar os dados de produto
+// e exponha essa função no contexto global
 
 const App = () => {
-    const video = React.useRef();
-
-    
-    console.log(video.current)
-
   return (
-    <div ref={video}>App</div>
+    <GlobalStorage>
+        <Produto/>
+        <Limpar/>
+    </GlobalStorage>
   )
 }
 
