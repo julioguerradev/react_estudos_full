@@ -1,22 +1,39 @@
-import React from 'react'
-import Produto from './componentes_execicio_usecontext/Produto'
-import Limpar from './componentes_execicio_usecontext/Limpar'
-import { GlobalStorage } from './componentes_execicio_usecontext/GlobalContext'
+import React, { useEffect } from 'react'
+import useLocalStorage from './componentes_custom/useLocalStorage'
+import useFetch from './componentes_custom/useFetch'
 
-// Utilize o GlobalContext do exemplo anterior para puxar os dados da API abaixo:
-// https://ranekapi.origamid.dev/json/api/produto/
-// assim que o usuário acessar o app
-// coloque os dados da API no contexto global, dando acesso aos dados da mesma
-// defina uma função chamada limparDados que é responsável por zerar os dados de produto
-// e exponha essa função no contexto global
-
+// Para ser um custom hook deve ser uma função que comece com use
 const App = () => {
-  return (
-    <GlobalStorage>
-        <Produto/>
-        <Limpar/>
-    </GlobalStorage>
-  )
+    const [produto, setProduto] = useLocalStorage('produto', '')
+    const {request, data, loading, error} = useFetch()
+
+    function handleClick({ target }) {
+        setProduto(target, innerText)
+    }
+
+    React,useEffect( () => {
+      async function fetchData() {
+        const {response, json} = await request('https://ranekapi.origamid.dev/json/api/produto/')
+      }
+      fetchData()
+    }, [])
+    
+  if(error) return <p>{error}</p>
+  if(loading) return <p>Carregando ...</p>
+  if(data)
+    return (
+      <div>
+          <button onClick={handleClick}>notebook</button>
+          <button onClick={handleClick}>smartphone</button>
+
+          {data.map((produto) => (
+              <div key={produto.id}>
+                  <h1>{produto.nome}</h1>
+              </div>
+          ))}
+      </div>
+    )
+  else return null
 }
 
 export default App
